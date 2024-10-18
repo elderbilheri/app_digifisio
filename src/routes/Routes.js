@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
+import CreateUserScreen from "../screens/CreateUserScreen";
 // Adicione outras telas aqui conforme necessário
 
 const Stack = createNativeStackNavigator();
@@ -21,6 +22,11 @@ const Routes = () => {
 					name="Login"
 					component={LoginScreen}
 					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="Usuario"
+					component={CreateUserScreen}
+					options={{ title: "Meu Perfil" }}
 				/>
 				{/* Adicione outras telas aqui */}
 			</Stack.Navigator>

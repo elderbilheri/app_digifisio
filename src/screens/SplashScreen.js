@@ -6,7 +6,7 @@ const SplashScreen = ({ navigation }) => {
 		// Timer de 1.7 segundos para ir para a tela de Login
 		const timer = setTimeout(() => {
 			navigation.replace("Login");
-		}, 1700);
+		}, 1200);
 
 		// Limpa o timer se o componente for desmontado
 		return () => clearTimeout(timer);

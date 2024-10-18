@@ -11,27 +11,10 @@ import {
 	TouchableWithoutFeedback,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-
-const schema = yup.object({
-	username: yup.string().required("Digite seu usuário!"),
-	password: yup
-		.string()
-		.min(6, "A senha deve ter pelo menos 6 dígitos!")
-		.required("Digite a sua senha!"),
-});
 
 const LoginScreen = () => {
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
-		resolver: yupResolver(schema),
-	});
-
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
 	// Verifica quando o teclado aparece e desaparece
@@ -55,9 +38,8 @@ const LoginScreen = () => {
 		};
 	}, []);
 
-	const handleLogin = (data) => {
-		const dataLogin = data;
-		console.log(dataLogin);
+	const handleLogin = () => {
+		// Lógica para login
 	};
 
 	return (
@@ -75,64 +57,20 @@ const LoginScreen = () => {
 					)}
 					<View style={styles.body}>
 						<Text style={styles.label}>Usuário</Text>
-						<Controller
-							control={control}
-							name="username"
-							render={({
-								field: { onChange, onBlur, value },
-							}) => (
-								<TextInput
-									style={[
-										styles.input,
-										{
-											borderWidth: errors.username && 1,
-											borderColor:
-												errors.username && "#ff375b",
-										},
-									]}
-									onChangeText={onChange}
-									onBlur={onBlur}
-									value={value}
-									placeholder="Digite seu usuário"
-								/>
-							)}
+						<TextInput
+							style={styles.input}
+							placeholder="Digite seu usuário"
+							value={email}
+							onChangeText={setEmail}
 						/>
-						{errors.username && (
-							<Text style={styles.messageError}>
-								{errors.username?.message}
-							</Text>
-						)}
-
 						<Text style={styles.label}>Senha</Text>
-						<Controller
-							control={control}
-							name="password"
-							render={({
-								field: { onChange, onBlur, value },
-							}) => (
-								<TextInput
-									style={[
-										styles.input,
-										{
-											borderWidth: errors.password && 1,
-											borderColor:
-												errors.password && "#ff375b",
-										},
-									]}
-									onChangeText={onChange}
-									onBlur={onBlur}
-									value={value}
-									placeholder="Digite sua senha"
-									secureTextEntry={true}
-								/>
-							)}
+						<TextInput
+							style={styles.input}
+							placeholder="Digite sua senha"
+							secureTextEntry
+							value={password}
+							onChangeText={setPassword}
 						/>
-						{errors.password && (
-							<Text style={styles.messageError}>
-								{errors.password?.message}
-							</Text>
-						)}
-
 						<TouchableOpacity>
 							<Text style={styles.forgotPassword}>
 								Esqueceu a senha?
@@ -142,7 +80,7 @@ const LoginScreen = () => {
 					<View style={styles.buttonContainer}>
 						<TouchableOpacity
 							style={styles.button}
-							onPress={handleSubmit(handleLogin)}
+							onPress={handleLogin}
 						>
 							<Text style={styles.buttonTitle}>ENTRAR</Text>
 						</TouchableOpacity>
@@ -196,7 +134,6 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		marginBottom: 15,
 		backgroundColor: "#e3e3e3",
-		// backgroundColor: "#F0F8FF",
 		elevation: 1,
 	},
 	forgotPassword: {
@@ -222,11 +159,6 @@ const styles = StyleSheet.create({
 		color: "#fff",
 		fontWeight: "bold",
 		textAlign: "center",
-	},
-	messageError: {
-		alignSelf: "flex-start",
-		color: "#ff375b",
-		marginBottom: 8,
 	},
 });
 
