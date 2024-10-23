@@ -6,6 +6,7 @@ import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import RecoveryScreen from "../screens/RecoveryScreen";
+import HomeScreen from "../screens/HomeScreen";
 // Adicione outras telas aqui conforme necessário
 
 const Stack = createNativeStackNavigator();
@@ -32,6 +33,11 @@ const Routes = () => {
 				<Stack.Screen
 					name="Recovery"
 					component={RecoveryScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="Home"
+					component={HomeScreen}
 					options={{ headerShown: false }}
 				/>
 				{/* Adicione outras telas aqui */}

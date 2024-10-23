@@ -41,7 +41,7 @@ const LoginScreen = () => {
 		setLoading(false);
 
 		if (isValid) {
-			navigation.navigate("HomeScreen");
+			navigation.navigate("Home");
 		} else {
 			Alert.alert("Erro", "Usuário ou senha incorretos!");
 		}
