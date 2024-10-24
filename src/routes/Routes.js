@@ -7,6 +7,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import RecoveryScreen from "../screens/RecoveryScreen";
 import HomeScreen from "../screens/HomeScreen";
+import RegisterPatient from "../screens/RegisterPatient";
 // Adicione outras telas aqui conforme necessário
 
 const Stack = createNativeStackNavigator();
@@ -38,6 +39,11 @@ const Routes = () => {
 				<Stack.Screen
 					name="Home"
 					component={HomeScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="RegisterPatient"
+					component={RegisterPatient}
 					options={{ headerShown: false }}
 				/>
 				{/* Adicione outras telas aqui */}

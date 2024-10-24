@@ -1,11 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import getUser from "../services/authService";
 
 const HomeScreen = ({ navigation }) => {
-	// const user = getUser();
-
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -43,9 +40,7 @@ const HomeScreen = ({ navigation }) => {
 				<View style={styles.row}>
 					<TouchableOpacity
 						style={[styles.card, { backgroundColor: "#388E3C" }]}
-						onPress={() =>
-							navigation.navigate("CadastrarPacientes")
-						}
+						onPress={() => navigation.navigate("RegisterPatient")}
 					>
 						<Icon name="person-add" size={40} color="#FFF" />
 						<Text style={styles.cardText}>Cadastrar Pacientes</Text>
