@@ -17,43 +17,29 @@ const HomeScreen = ({ navigation }) => {
 			</View>
 
 			<View style={styles.cardsContainer}>
-				<View style={styles.row}>
-					<TouchableOpacity
-						style={[styles.card, { backgroundColor: "#D282BC" }]}
-						onPress={() => navigation.navigate("AtendimentosHoje")}
-					>
-						<Icon name="calendar" size={40} color="#FFF" />
-						<Text style={styles.cardText}>
-							Atendimentos de Hoje
-						</Text>
-					</TouchableOpacity>
+				<TouchableOpacity
+					style={[styles.card, { backgroundColor: "#D282BC" }]}
+					onPress={() => navigation.navigate("AtendimentosHoje")}
+				>
+					<Icon name="calendar" size={40} color="#FFF" />
+					<Text style={styles.cardText}>Atendimentos de Hoje</Text>
+				</TouchableOpacity>
 
-					<TouchableOpacity
-						style={[styles.card, { backgroundColor: "#00BFFF" }]}
-						onPress={() => navigation.navigate("FichaPacientes")}
-					>
-						<Icon name="folder-open" size={40} color="#FFF" />
-						<Text style={styles.cardText}>Ficha dos Pacientes</Text>
-					</TouchableOpacity>
-				</View>
+				<TouchableOpacity
+					style={[styles.card, { backgroundColor: "#00BFFF" }]}
+					onPress={() => navigation.navigate("PatientList")}
+				>
+					<Icon name="folder-open" size={40} color="#FFF" />
+					<Text style={styles.cardText}>Lista de Pacientes</Text>
+				</TouchableOpacity>
 
-				<View style={styles.row}>
-					<TouchableOpacity
-						style={[styles.card, { backgroundColor: "#388E3C" }]}
-						onPress={() => navigation.navigate("RegisterPatient")}
-					>
-						<Icon name="person-add" size={40} color="#FFF" />
-						<Text style={styles.cardText}>Cadastrar Pacientes</Text>
-					</TouchableOpacity>
-
-					<TouchableOpacity
-						style={[styles.card, { backgroundColor: "#F5BB2E" }]}
-						onPress={() => navigation.navigate("RelatorioSemanal")}
-					>
-						<Icon name="document-text" size={40} color="#FFF" />
-						<Text style={styles.cardText}>Relatório Semanal</Text>
-					</TouchableOpacity>
-				</View>
+				<TouchableOpacity
+					style={[styles.card, { backgroundColor: "#388E3C" }]}
+					onPress={() => navigation.navigate("RegisterPatient")}
+				>
+					<Icon name="person-add" size={40} color="#FFF" />
+					<Text style={styles.cardText}>Cadastrar Pacientes</Text>
+				</TouchableOpacity>
 			</View>
 
 			<View style={styles.footer}></View>
@@ -94,17 +80,14 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		width: "100%",
 		paddingHorizontal: 20,
-	},
-	row: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		marginBottom: 20,
+		alignItems: "center",
 	},
 	card: {
-		width: "49%",
+		width: "60%",
 		alignItems: "center",
 		justifyContent: "center",
 		paddingVertical: 20,
+		marginBottom: 20,
 		elevation: 6,
 	},
 	cardText: {

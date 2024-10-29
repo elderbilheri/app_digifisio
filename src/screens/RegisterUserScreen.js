@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { saveUser } from "../services/authService";
 import { useNavigation } from "@react-navigation/native";
+import { generateId } from "../services/utils";
 
 const schema = yup.object({
 	username: yup.string().required("Usuário é obrigatório!"),
@@ -24,7 +25,7 @@ const schema = yup.object({
 		.required("Palavra-chave de recuperação é obrigatória!"),
 });
 
-const RegisterScreen = () => {
+const RegisterUserScreen = () => {
 	const {
 		control,
 		handleSubmit,
@@ -36,9 +37,16 @@ const RegisterScreen = () => {
 	const navigation = useNavigation();
 
 	const onSubmit = async (data) => {
-		await saveUser(data);
-		Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
-		navigation.navigate("Login");
+		const userData = { ...data, id: generateId() };
+
+		try {
+			await saveUser(userData);
+			Alert.alert("Sucesso", "Usuário cadastrado com sucesso!");
+			navigation.navigate("Login");
+		} catch (error) {
+			console.error("Erro ao salvar usuário:", error);
+			Alert.alert("Erro ao salvar usuário");
+		}
 	};
 
 	return (
@@ -111,4 +119,4 @@ const styles = StyleSheet.create({
 	error: { color: "red" },
 });
 
-export default RegisterScreen;
+export default RegisterUserScreen;

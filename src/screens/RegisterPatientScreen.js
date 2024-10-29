@@ -15,7 +15,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { savePatient } from "../services/patientService";
 
+// Esquema de validação com Yup
 const schema = Yup.object().shape({
 	name: Yup.string().required("Nome é obrigatório"),
 	birthDate: Yup.string().required("Data de Nascimento é obrigatória"),
@@ -45,27 +47,37 @@ const RegisterPatient = ({ navigation }) => {
 		"Quarta-feira": false,
 		"Quinta-feira": false,
 		"Sexta-feira": false,
-		Sabado: false, // Certifique-se de manter a mesma grafia
+		Sabado: false,
 	});
 
+	// Função para envio dos dados ao cadastrar paciente
 	const onSubmit = async (data) => {
-		const patientData = {
-			...data,
-			daysOfWeek,
-		};
-
 		try {
-			const storedPatients = await AsyncStorage.getItem("patients");
-			const patients = storedPatients ? JSON.parse(storedPatients) : [];
-			patients.push(patientData);
+			const userId = await AsyncStorage.getItem("loggedUserId");
 
-			await AsyncStorage.setItem("patients", JSON.stringify(patients));
-			// console.log("Paciente salvo com sucesso:", patientData);
-			Alert.alert("Paciente salvo com sucesso!");
+			if (!userId) {
+				Alert.alert(
+					"Erro",
+					"Usuário não encontrado. Faça login novamente."
+				);
+				navigation.navigate("Login");
+				return;
+			}
+
+			const daysActive = Object.entries(daysOfWeek)
+				.filter(([_, isActive]) => isActive)
+				.map(([day]) => day);
+
+			const newPatientData = { ...data, daysOfWeek: daysActive };
+
+			const newPatient = await savePatient(newPatientData, userId);
+			console.log("Último paciente cadastrado:", newPatient);
+			Alert.alert("Paciente cadastrado com sucesso!");
 
 			navigation.navigate("Home");
 		} catch (error) {
 			console.error("Erro ao salvar paciente:", error);
+			Alert.alert("Erro ao salvar paciente");
 		}
 	};
 
@@ -286,7 +298,7 @@ const RegisterPatient = ({ navigation }) => {
 			/>
 
 			<TouchableOpacity onPress={() => navigation.navigate("Home")}>
-				<Text style={styles.link}>Cancelar</Text>
+				<Text style={styles.link}>Voltar</Text>
 			</TouchableOpacity>
 		</ScrollView>
 	);

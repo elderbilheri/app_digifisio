@@ -1,14 +1,13 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-
 import SplashScreen from "../screens/SplashScreen";
 import LoginScreen from "../screens/LoginScreen";
-import RegisterScreen from "../screens/RegisterScreen";
+import RegisterUserScreen from "../screens/RegisterUserScreen";
 import RecoveryScreen from "../screens/RecoveryScreen";
 import HomeScreen from "../screens/HomeScreen";
-import RegisterPatient from "../screens/RegisterPatient";
-// Adicione outras telas aqui conforme necessário
+import RegisterPatientScreen from "../screens/RegisterPatientScreen";
+import PatientListScreen from "../screens/PatientListScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +27,7 @@ const Routes = () => {
 				/>
 				<Stack.Screen
 					name="RegisterUser"
-					component={RegisterScreen}
+					component={RegisterUserScreen}
 					options={{ headerShown: false }}
 				/>
 				<Stack.Screen
@@ -43,10 +42,14 @@ const Routes = () => {
 				/>
 				<Stack.Screen
 					name="RegisterPatient"
-					component={RegisterPatient}
+					component={RegisterPatientScreen}
 					options={{ headerShown: false }}
 				/>
-				{/* Adicione outras telas aqui */}
+				<Stack.Screen
+					name="PatientList"
+					component={PatientListScreen}
+					options={{ headerShown: false }}
+				/>
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

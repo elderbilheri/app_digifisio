@@ -12,8 +12,9 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { validateUser } from "../services/authService";
+import { loginUser } from "../services/authService";
 
 const schema = yup.object({
 	username: yup.string().required("Digite seu usuário!"),
@@ -34,13 +35,13 @@ const LoginScreen = () => {
 	const [loading, setLoading] = useState(false);
 	const navigation = useNavigation();
 
-	// Função que chama a validação do Usuário existen no Asyncstorage
 	const onLogin = async (data) => {
 		setLoading(true);
-		const isValid = await validateUser(data.username, data.password);
+		const user = await loginUser(data.username, data.password);
 		setLoading(false);
 
-		if (isValid) {
+		if (user) {
+			await AsyncStorage.setItem("loggedUserId", user.id);
 			navigation.navigate("Home");
 		} else {
 			Alert.alert("Erro", "Usuário ou senha incorretos!");
