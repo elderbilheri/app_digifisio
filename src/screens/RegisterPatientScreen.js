@@ -16,6 +16,7 @@ import { Picker } from "@react-native-picker/picker";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { savePatient } from "../services/patientService";
+import NavigateButton from "../components/NavigateButton";
 
 // Esquema de validação com Yup
 const schema = Yup.object().shape({
@@ -297,9 +298,7 @@ const RegisterPatient = ({ navigation }) => {
 				onPress={handleSubmit(onSubmit)}
 			/>
 
-			<TouchableOpacity onPress={() => navigation.navigate("Home")}>
-				<Text style={styles.link}>Voltar</Text>
-			</TouchableOpacity>
+			<NavigateButton targetScreen="Home" title="Voltar" />
 		</ScrollView>
 	);
 };

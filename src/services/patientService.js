@@ -36,3 +36,15 @@ export const getPatients = async (userId) => {
 		throw new Error("Erro ao buscar pacientes.");
 	}
 };
+
+// Função para buscar paciente específico pelo ID do paciente
+export const getPatientById = async (patientId, userId) => {
+	try {
+		const storedPatients = await AsyncStorage.getItem(`patients_${userId}`);
+		const patients = storedPatients ? JSON.parse(storedPatients) : [];
+		return patients.find((patient) => patient.id === patientId) || null;
+	} catch (error) {
+		console.error("Erro ao buscar paciente por ID:", error);
+		throw new Error("Erro ao buscar paciente.");
+	}
+};

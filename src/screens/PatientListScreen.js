@@ -6,19 +6,22 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { getUser } from "../services/authService";
 import { getPatients } from "../services/patientService";
+import NavigateButton from "../components/NavigateButton";
 
 const PatientListScreen = () => {
 	const [patients, setPatients] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const navigation = useNavigation();
 
 	useEffect(() => {
 		const fetchPatients = async () => {
 			try {
 				// Obtém o usuário logado para acessar o userId
 				const user = await getUser();
-				console.log(user);
+				// console.log(user);
 				if (user) {
 					const patientsList = await getPatients(user);
 					console.log("Pacientes recuperados:", patientsList); // Log para depuração
@@ -47,7 +50,12 @@ const PatientListScreen = () => {
 			</View>
 			<TouchableOpacity
 				style={styles.arrowButton}
-				onPress={() => alert("Opções para " + item.name)}
+				onPress={() =>
+					navigation.navigate("Attendance", {
+						patientId: item.id,
+						patientName: item.name,
+					})
+				}
 			>
 				<Text style={styles.arrowText}>›</Text>
 			</TouchableOpacity>
@@ -60,16 +68,20 @@ const PatientListScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Lista de Pacientes</Text>
-			{patients.length > 0 ? (
-				<FlatList
-					data={patients}
-					keyExtractor={(item) => item.id}
-					renderItem={renderPatientItem}
-				/>
-			) : (
-				<Text>Nenhum paciente encontrado.</Text>
-			)}
+			<View>
+				<Text style={styles.title}>Lista de Pacientes</Text>
+				{patients.length > 0 ? (
+					<FlatList
+						data={patients}
+						keyExtractor={(item) => item.id}
+						renderItem={renderPatientItem}
+					/>
+				) : (
+					<Text>Nenhum paciente encontrado.</Text>
+				)}
+			</View>
+
+			<NavigateButton targetScreen="Home" title="Voltar" />
 		</View>
 	);
 };
@@ -79,11 +91,16 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 16,
 		backgroundColor: "#FFF",
+		justifyContent: "space-between",
 	},
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",
-		marginBottom: 16,
+		marginVertical: 20,
+		textAlign: "center",
+		backgroundColor: "#281942",
+		paddingVertical: 5,
+		color: "#FFF",
 	},
 	patientItem: {
 		flexDirection: "row",

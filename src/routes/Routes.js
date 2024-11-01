@@ -8,6 +8,7 @@ import RecoveryScreen from "../screens/RecoveryScreen";
 import HomeScreen from "../screens/HomeScreen";
 import RegisterPatientScreen from "../screens/RegisterPatientScreen";
 import PatientListScreen from "../screens/PatientListScreen";
+import AttendanceScreen from "../screens/AttendanceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,11 @@ const Routes = () => {
 				<Stack.Screen
 					name="PatientList"
 					component={PatientListScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="Attendance"
+					component={AttendanceScreen}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>
