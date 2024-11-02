@@ -6,10 +6,12 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 } from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { getUser } from "../services/authService";
 import { getPatients } from "../services/patientService";
 import NavigateButton from "../components/NavigateButton";
+import { capitalizeFirstLetter } from "../services/utils";
 
 const PatientListScreen = () => {
 	const [patients, setPatients] = useState([]);
@@ -24,7 +26,7 @@ const PatientListScreen = () => {
 				// console.log(user);
 				if (user) {
 					const patientsList = await getPatients(user);
-					console.log("Pacientes recuperados:", patientsList); // Log para depuração
+					// console.log("Pacientes recuperados:", patientsList); // Log para depuração
 					setPatients(patientsList);
 				} else {
 					console.log("Usuário não encontrado.");
@@ -45,19 +47,21 @@ const PatientListScreen = () => {
 			<View>
 				<Text style={styles.patientName}>{item.name}</Text>
 				<Text style={styles.patientSubtitle}>
-					{item.atendimentoLocation}
+					{capitalizeFirstLetter(item.atendimentoLocation)}
 				</Text>
 			</View>
 			<TouchableOpacity
 				style={styles.arrowButton}
 				onPress={() =>
-					navigation.navigate("Attendance", {
+					navigation.navigate("AttendanceList", {
 						patientId: item.id,
 						patientName: item.name,
 					})
 				}
 			>
-				<Text style={styles.arrowText}>›</Text>
+				<Text>
+					<Icon name="enter-sharp" size={35} color="#007BFF" />
+				</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -112,6 +116,7 @@ const styles = StyleSheet.create({
 	patientName: {
 		fontSize: 18,
 		fontWeight: "bold",
+		color: "#281942",
 	},
 	patientSubtitle: {
 		fontSize: 14,
@@ -119,10 +124,6 @@ const styles = StyleSheet.create({
 	},
 	arrowButton: {
 		justifyContent: "center",
-	},
-	arrowText: {
-		fontSize: 18,
-		color: "#007BFF",
 	},
 });
 

@@ -212,6 +212,7 @@ const RegisterPatient = ({ navigation }) => {
 							onValueChange={onChange}
 							style={styles.input}
 						>
+							<Picker.Item label="Selecione o tipo" value="" />
 							<Picker.Item
 								label="Domiciliar"
 								value="domiciliar"

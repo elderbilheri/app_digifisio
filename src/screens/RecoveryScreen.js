@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { getUser } from "../services/authService";
 import { useNavigation } from "@react-navigation/native";
+import NavigateButton from "../components/NavigateButton";
 
 const schema = yup.object({
 	recoveryKey: yup
@@ -76,9 +77,7 @@ const RecoveryScreen = () => {
 				</Text>
 			</TouchableOpacity>
 
-			<TouchableOpacity onPress={() => navigation.navigate("Login")}>
-				<Text style={styles.link}>Voltar ao Login</Text>
-			</TouchableOpacity>
+			<NavigateButton targetScreen="Login" title="Voltar ao Login" />
 		</View>
 	);
 };

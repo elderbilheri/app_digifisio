@@ -9,31 +9,35 @@ import {
 } from "react-native";
 import { getAttendances } from "../services/attendanceService";
 import NavigateButton from "../components/NavigateButton";
+import { useFocusEffect } from "@react-navigation/native";
 
-const AttendanceScreen = ({ route, navigation }) => {
+const AttendanceListScreen = ({ route, navigation }) => {
 	const { patientId, patientName } = route.params; // Recebe o ID e nome do paciente
 	const [attendances, setAttendances] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		const fetchAttendances = async () => {
-			try {
-				const attendancesList = await getAttendances(patientId);
-				setAttendances(attendancesList);
-			} catch (error) {
-				console.error("Erro ao buscar atendimentos:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
+	useFocusEffect(
+		React.useCallback(() => {
+			const fetchAttendances = async () => {
+				try {
+					const attendancesList = await getAttendances(patientId);
+					setAttendances(attendancesList);
+					console.log(attendancesList); // Log do array atualizado
+				} catch (error) {
+					console.error("Erro ao buscar atendimentos:", error);
+				} finally {
+					setLoading(false);
+				}
+			};
 
-		fetchAttendances();
-	}, [patientId]);
+			fetchAttendances();
+		}, [patientId])
+	);
 
 	// Renderiza cada item da lista de atendimentos
 	const renderAttendanceItem = ({ item }) => (
 		<View style={styles.attendanceItem}>
-			<Text style={styles.attendanceDescription}>{item.description}</Text>
+			<Text style={styles.attendanceDescription}>{item.type}</Text>
 			<Text style={styles.attendanceDate}>{item.date}</Text>
 		</View>
 	);
@@ -65,7 +69,10 @@ const AttendanceScreen = ({ route, navigation }) => {
 					<TouchableOpacity
 						style={styles.addButton}
 						onPress={() =>
-							navigation.navigate("AddAttendance", { patientId })
+							navigation.navigate("AttendanceRegister", {
+								patientId,
+								patientName,
+							})
 						}
 					>
 						<Text style={styles.addButtonText}>+</Text>
@@ -77,6 +84,7 @@ const AttendanceScreen = ({ route, navigation }) => {
 					<FlatList
 						data={attendances}
 						keyExtractor={(item) => item.id}
+						// keyExtractor={(item, index) => index.toString()}
 						renderItem={renderAttendanceItem}
 					/>
 				) : (
@@ -109,7 +117,7 @@ const styles = StyleSheet.create({
 	divider: {
 		height: 1,
 		backgroundColor: "#DDD",
-		marginBottom: 16,
+		marginBottom: 30,
 		marginTop: 12,
 		elevation: 6,
 	},
@@ -117,7 +125,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginBottom: 16,
+		marginBottom: 20,
 	},
 	headerTitle: {
 		fontSize: 20,
@@ -163,4 +171,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default AttendanceScreen;
+export default AttendanceListScreen;
