@@ -42,3 +42,53 @@ export const getAttendances = async (patientId) => {
 		throw new Error("Erro ao buscar atendimentos.");
 	}
 };
+
+// Função para buscar um atendimento específico pelo ID
+export const getAttendanceById = async (attendanceId, patientId) => {
+	try {
+		const storedAttendances = await AsyncStorage.getItem(
+			`attendances_${patientId}`
+		);
+		const attendances = storedAttendances
+			? JSON.parse(storedAttendances)
+			: [];
+
+		// Encontra o atendimento específico pelo ID
+		const attendance = attendances.find((item) => item.id === attendanceId);
+		return attendance || null; // Retorna o atendimento ou null se não encontrado
+	} catch (error) {
+		console.error("Erro ao buscar atendimento:", error);
+		throw new Error("Erro ao buscar atendimento.");
+	}
+};
+
+// Função para atualizar um atendimento existente
+export const updateAttendance = async (
+	attendanceId,
+	updatedData,
+	patientId
+) => {
+	try {
+		const storedAttendances = await AsyncStorage.getItem(
+			`attendances_${patientId}`
+		);
+		let attendances = storedAttendances
+			? JSON.parse(storedAttendances)
+			: [];
+
+		// Mapeia os atendimentos e atualiza o que tem o ID correspondente
+		attendances = attendances.map((attendance) =>
+			attendance.id === attendanceId
+				? { ...attendance, ...updatedData }
+				: attendance
+		);
+
+		await AsyncStorage.setItem(
+			`attendances_${patientId}`,
+			JSON.stringify(attendances)
+		);
+	} catch (error) {
+		console.error("Erro ao atualizar atendimento:", error);
+		throw new Error("Erro ao atualizar atendimento.");
+	}
+};

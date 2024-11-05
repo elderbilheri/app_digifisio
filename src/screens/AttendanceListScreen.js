@@ -34,11 +34,24 @@ const AttendanceListScreen = ({ route, navigation }) => {
 		}, [patientId])
 	);
 
-	// Renderiza cada item da lista de atendimentos
 	const renderAttendanceItem = ({ item }) => (
 		<View style={styles.attendanceItem}>
-			<Text style={styles.attendanceDescription}>{item.type}</Text>
-			<Text style={styles.attendanceDate}>{item.date}</Text>
+			<View>
+				<Text style={styles.attendanceDescription}>{item.type}</Text>
+				<Text style={styles.attendanceDate}>{item.date}</Text>
+			</View>
+			{/* Botão de edição ao lado */}
+			<TouchableOpacity
+				style={styles.editButton}
+				onPress={() =>
+					navigation.navigate("AttendanceRegister", {
+						attendanceId: item.id, // Passa o ID do atendimento para edição
+						patientId, // Passa o ID do paciente para contexto
+					})
+				}
+			>
+				<Text style={styles.editButtonText}>Editar</Text>
+			</TouchableOpacity>
 		</View>
 	);
 
@@ -56,7 +69,12 @@ const AttendanceListScreen = ({ route, navigation }) => {
 				<Button
 					title="Cadastro do Paciente"
 					onPress={() =>
-						navigation.navigate("EditPatient", { patientId })
+						// navigation.navigate("RegisterPatient", {
+						// 	patientId: patientId,
+						// })
+						navigation.navigate("RegisterPatient", {
+							patientId,
+						})
 					}
 				/>
 
@@ -71,7 +89,6 @@ const AttendanceListScreen = ({ route, navigation }) => {
 						onPress={() =>
 							navigation.navigate("AttendanceRegister", {
 								patientId,
-								patientName,
 							})
 						}
 					>
@@ -84,7 +101,6 @@ const AttendanceListScreen = ({ route, navigation }) => {
 					<FlatList
 						data={attendances}
 						keyExtractor={(item) => item.id}
-						// keyExtractor={(item, index) => index.toString()}
 						renderItem={renderAttendanceItem}
 					/>
 				) : (
@@ -152,6 +168,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: "#DDD",
 		flexDirection: "row",
 		justifyContent: "space-between",
+		alignItems: "center",
 	},
 	attendanceDescription: {
 		fontSize: 16,
@@ -160,6 +177,18 @@ const styles = StyleSheet.create({
 	attendanceDate: {
 		fontSize: 14,
 		color: "#555",
+	},
+	editButton: {
+		borderWidth: 1,
+		backgroundColor: "#281942",
+		borderRadius: 4,
+	},
+	editButtonText: {
+		color: "#FFF",
+		fontSize: 14,
+		fontWeight: "500",
+		paddingVertical: 5,
+		paddingHorizontal: 12,
 	},
 	buttonReturn: {
 		marginTop: 8,

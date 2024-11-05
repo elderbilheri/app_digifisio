@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -15,8 +15,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { savePatient } from "../services/patientService";
-import NavigateButton from "../components/NavigateButton";
+import {
+	savePatient,
+	updatePatient,
+	getPatientById,
+} from "../services/patientService";
 
 // Esquema de validação com Yup
 const schema = Yup.object().shape({
@@ -24,7 +27,7 @@ const schema = Yup.object().shape({
 	birthDate: Yup.string().required("Data de Nascimento é obrigatória"),
 	gender: Yup.string().required("Sexo é obrigatório"),
 	phone: Yup.string().required("Fone é obrigatório"),
-	age: Yup.number().required("Idade é obrigatória").positive().integer(),
+	age: Yup.string().required("Idade é obrigatória"),
 	atendimentoLocation: Yup.string().required(
 		"Local de Atendimento é obrigatório"
 	),
@@ -32,10 +35,14 @@ const schema = Yup.object().shape({
 	diagnosis: Yup.string().required("Diagnóstico Principal é obrigatório"),
 });
 
-const RegisterPatient = ({ navigation }) => {
+const RegisterPatient = ({ route, navigation }) => {
+	const { patientId } = route.params || {}; // Obter o patientId passado via navegação
+	const [userId, setUserId] = useState(null);
+
 	const {
 		control,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
@@ -51,11 +58,49 @@ const RegisterPatient = ({ navigation }) => {
 		Sabado: false,
 	});
 
+	// obtém o userId e o patientId caso exista, para carregar os dados do paciente
+	useEffect(() => {
+		const fetchUserAndPatient = async () => {
+			try {
+				const storedUserId = await AsyncStorage.getItem("loggedUserId");
+				setUserId(storedUserId);
+
+				if (patientId && storedUserId) {
+					const patient = await getPatientById(
+						patientId,
+						storedUserId
+					);
+					if (patient) {
+						setDaysOfWeek(
+							Object.fromEntries(
+								[
+									"Domingo",
+									"Segunda-feira",
+									"Terça-feira",
+									"Quarta-feira",
+									"Quinta-feira",
+									"Sexta-feira",
+									"Sabado",
+								].map((day) => [
+									day,
+									patient.daysOfWeek.includes(day),
+								])
+							)
+						);
+						reset(patient); // Preenche o formulário com dados do paciente
+					}
+				}
+			} catch (error) {
+				console.error("Erro ao carregar dados:", error);
+			}
+		};
+
+		fetchUserAndPatient();
+	}, [patientId, reset]);
+
 	// Função para envio dos dados ao cadastrar paciente
 	const onSubmit = async (data) => {
 		try {
-			const userId = await AsyncStorage.getItem("loggedUserId");
-
 			if (!userId) {
 				Alert.alert(
 					"Erro",
@@ -69,13 +114,19 @@ const RegisterPatient = ({ navigation }) => {
 				.filter(([_, isActive]) => isActive)
 				.map(([day]) => day);
 
-			const newPatientData = { ...data, daysOfWeek: daysActive };
+			const patientData = { ...data, daysOfWeek: daysActive };
 
-			const newPatient = await savePatient(newPatientData, userId);
-			console.log("Último paciente cadastrado:", newPatient);
-			Alert.alert("Paciente cadastrado com sucesso!");
+			if (patientId) {
+				await updatePatient(patientId, patientData, userId);
+				Alert.alert("Paciente atualizado com sucesso!");
+			} else {
+				await savePatient(patientData, userId);
+				Alert.alert("Paciente cadastrado com sucesso!");
+			}
 
-			navigation.navigate("Home");
+			console.log(patientData);
+
+			navigation.goBack(); // Retorna à tela anterior
 		} catch (error) {
 			console.error("Erro ao salvar paciente:", error);
 			Alert.alert("Erro ao salvar paciente");
@@ -91,7 +142,9 @@ const RegisterPatient = ({ navigation }) => {
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
-			<Text style={styles.title}>Cadastro de Paciente</Text>
+			<Text style={styles.title}>
+				{patientId ? "Editar Paciente" : "Cadastrar Paciente"}
+			</Text>
 
 			<Text style={styles.labels}>Nome do Paciente</Text>
 			<Controller
@@ -295,11 +348,13 @@ const RegisterPatient = ({ navigation }) => {
 			</View>
 
 			<Button
-				title="Cadastrar Paciente"
+				title={patientId ? "Atualizar Paciente" : "Salvar Paciente"}
 				onPress={handleSubmit(onSubmit)}
 			/>
 
-			<NavigateButton targetScreen="Home" title="Voltar" />
+			<TouchableOpacity onPress={() => navigation.goBack()}>
+				<Text style={styles.link}>Cancelar</Text>
+			</TouchableOpacity>
 		</ScrollView>
 	);
 };

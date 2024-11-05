@@ -23,10 +23,12 @@ const PatientListScreen = () => {
 			try {
 				// Obtém o usuário logado para acessar o userId
 				const user = await getUser();
-				// console.log(user);
 				if (user) {
 					const patientsList = await getPatients(user);
-					// console.log("Pacientes recuperados:", patientsList); // Log para depuração
+					console.log(
+						"---------------------------------Pacientes recuperados:-----------------------",
+						patientsList
+					); // Log para depuração
 					setPatients(patientsList);
 				} else {
 					console.log("Usuário não encontrado.");

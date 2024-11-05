@@ -48,3 +48,37 @@ export const getPatientById = async (patientId, userId) => {
 		throw new Error("Erro ao buscar paciente.");
 	}
 };
+
+// Função para atualizar um paciente específico pelo ID e ID do usuário
+export const updatePatient = async (patientId, updatedPatientData, userId) => {
+	try {
+		const storedPatients = await AsyncStorage.getItem(`patients_${userId}`);
+		const patients = storedPatients ? JSON.parse(storedPatients) : [];
+
+		// Encontra o índice do paciente a ser atualizado
+		const patientIndex = patients.findIndex(
+			(patient) => patient.id === patientId
+		);
+
+		if (patientIndex === -1) {
+			throw new Error("Paciente não encontrado.");
+		}
+
+		// Atualiza o paciente com os novos dados
+		patients[patientIndex] = {
+			...patients[patientIndex],
+			...updatedPatientData,
+		};
+
+		// Salva a lista de pacientes atualizada
+		await AsyncStorage.setItem(
+			`patients_${userId}`,
+			JSON.stringify(patients)
+		);
+
+		return patients[patientIndex]; // Retorna o paciente atualizado
+	} catch (error) {
+		console.error("Erro ao atualizar paciente:", error);
+		throw new Error("Erro ao atualizar paciente.");
+	}
+};

@@ -1,5 +1,4 @@
-// AttendanceRegisterScreen.js
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	View,
 	Text,
@@ -13,7 +12,11 @@ import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Picker } from "@react-native-picker/picker";
-import { saveAttendance } from "../services/attendanceService";
+import {
+	getAttendanceById,
+	updateAttendance,
+	saveAttendance,
+} from "../services/attendanceService";
 
 const schema = Yup.object().shape({
 	type: Yup.string().required("Selecione o tipo de atendimento"),
@@ -24,21 +27,44 @@ const schema = Yup.object().shape({
 });
 
 const AttendanceRegisterScreen = ({ route, navigation }) => {
-	const { patientId } = route.params; // Recebe o ID do paciente
+	const { attendanceId, patientId } = route.params || {}; // Recebe o ID do atendimento (se estiver em edição)
 	const {
 		control,
 		handleSubmit,
+		setValue,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
 
+	useEffect(() => {
+		const fetchAttendance = async () => {
+			if (attendanceId) {
+				// Carrega os dados do atendimento para edição
+				const attendance = await getAttendanceById(
+					attendanceId,
+					patientId
+				);
+				setValue("type", attendance.type);
+				setValue("date", attendance.date);
+				setValue("description", attendance.description);
+			}
+		};
+
+		fetchAttendance();
+	}, [attendanceId, setValue]);
+
 	const onSubmit = async (data) => {
 		try {
-			// Salva o atendimento usando a função saveAttendance
-			await saveAttendance(data, patientId);
-
-			Alert.alert("Sucesso", "Atendimento cadastrado com sucesso!");
+			if (attendanceId) {
+				// Atualiza o atendimento existente
+				await updateAttendance(attendanceId, data, patientId);
+				Alert.alert("Sucesso", "Atendimento atualizado com sucesso!");
+			} else {
+				// Salva um novo atendimento
+				await saveAttendance(data, patientId);
+				Alert.alert("Sucesso", "Atendimento cadastrado com sucesso!");
+			}
 			navigation.goBack(); // Retorna à tela de Lista de Atendimentos
 		} catch (error) {
 			console.error("Erro ao salvar atendimento:", error);
@@ -48,7 +74,9 @@ const AttendanceRegisterScreen = ({ route, navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Cadastrar Atendimento</Text>
+			<Text style={styles.title}>
+				{attendanceId ? "Editar Atendimento" : "Cadastrar Atendimento"}
+			</Text>
 
 			<View>
 				<Text style={styles.label}>Tipo de Atendimento</Text>
@@ -129,7 +157,11 @@ const AttendanceRegisterScreen = ({ route, navigation }) => {
 
 			<View>
 				<Button
-					title="Salvar Atendimento"
+					title={
+						attendanceId
+							? "Atualizar Atendimento"
+							: "Salvar Atendimento"
+					}
 					onPress={handleSubmit(onSubmit)}
 				/>
 
