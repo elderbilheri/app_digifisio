@@ -61,54 +61,46 @@ const AttendanceListScreen = ({ route, navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<View>
-				{/* Título com nome do paciente */}
+			{/* Área superior fixa com nome do paciente e botão de cadastro */}
+			<View style={styles.headerContainer}>
 				<Text style={styles.title}>{patientName}</Text>
-
-				{/* Botão para edição do cadastro do paciente */}
 				<Button
 					title="Cadastro do Paciente"
 					onPress={() =>
-						// navigation.navigate("RegisterPatient", {
-						// 	patientId: patientId,
-						// })
-						navigation.navigate("RegisterPatient", {
-							patientId,
-						})
+						navigation.navigate("RegisterPatient", { patientId })
 					}
 				/>
+			</View>
 
-				{/* Linha divisória */}
-				<View style={styles.divider} />
+			{/* Área do título dos atendimentos e botão de adicionar */}
+			<View style={styles.attendanceHeader}>
+				<Text style={styles.headerTitle}>Atendimentos</Text>
+				<TouchableOpacity
+					style={styles.addButton}
+					onPress={() =>
+						navigation.navigate("AttendanceRegister", { patientId })
+					}
+				>
+					<Text style={styles.addButtonText}>+</Text>
+				</TouchableOpacity>
+			</View>
 
-				{/* Título e botão de adicionar atendimento */}
-				<View style={styles.header}>
-					<Text style={styles.headerTitle}>Atendimentos</Text>
-					<TouchableOpacity
-						style={styles.addButton}
-						onPress={() =>
-							navigation.navigate("AttendanceRegister", {
-								patientId,
-							})
-						}
-					>
-						<Text style={styles.addButtonText}>+</Text>
-					</TouchableOpacity>
-				</View>
-
-				{/* Lista de atendimentos */}
+			<View style={styles.listContainer}>
 				{attendances.length > 0 ? (
 					<FlatList
 						data={attendances}
 						keyExtractor={(item) => item.id}
 						renderItem={renderAttendanceItem}
+						contentContainerStyle={{ paddingBottom: 20 }}
 					/>
 				) : (
 					<Text>Nenhum atendimento encontrado.</Text>
 				)}
 			</View>
 
-			<NavigateButton targetScreen="PatientList" title="Voltar" />
+			<View style={styles.footer}>
+				<NavigateButton targetScreen="PatientList" title="VOLTAR" />
+			</View>
 		</View>
 	);
 };
@@ -116,31 +108,28 @@ const AttendanceListScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		padding: 16,
 		backgroundColor: "#FFF",
 		justifyContent: "space-between",
+	},
+	headerContainer: {
+		padding: 16,
+		marginTop: 14,
 	},
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",
-		marginTop: 20,
-		marginBottom: 5,
 		textAlign: "center",
 		backgroundColor: "#281942",
 		paddingVertical: 5,
 		color: "#FFF",
+		marginBottom: 3,
 	},
-	divider: {
-		height: 1,
-		backgroundColor: "#DDD",
-		marginBottom: 30,
-		marginTop: 12,
-		elevation: 6,
-	},
-	header: {
+	attendanceHeader: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
+		paddingHorizontal: 16,
+		marginTop: 10,
 		marginBottom: 20,
 	},
 	headerTitle: {
@@ -161,6 +150,10 @@ const styles = StyleSheet.create({
 		color: "#FFF",
 		fontSize: 30,
 		fontWeight: "400",
+	},
+	listContainer: {
+		flex: 1,
+		paddingHorizontal: 16,
 	},
 	attendanceItem: {
 		padding: 16,
@@ -190,13 +183,12 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		paddingHorizontal: 12,
 	},
-	buttonReturn: {
-		marginTop: 8,
-	},
-	link: {
-		color: "blue",
-		textAlign: "center",
-		fontSize: 18,
+	footer: {
+		position: "absolute",
+		bottom: 0,
+		width: "100%",
+		padding: 4,
+		backgroundColor: "#FFF",
 	},
 });
 

@@ -166,7 +166,7 @@ const AttendanceRegisterScreen = ({ route, navigation }) => {
 				/>
 
 				<TouchableOpacity onPress={() => navigation.goBack()}>
-					<Text style={styles.link}>Cancelar</Text>
+					<Text style={styles.link}>CANCELAR</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -217,10 +217,15 @@ const styles = StyleSheet.create({
 		marginBottom: 8,
 	},
 	link: {
-		color: "blue",
-		textAlign: "center",
 		marginVertical: 10,
-		fontSize: 18,
+		color: "#FFF",
+		textAlign: "center",
+		marginTop: 4,
+		marginBottom: 2,
+		paddingVertical: 6,
+		fontSize: 16,
+		fontWeight: "400",
+		backgroundColor: "#444",
 	},
 });
 

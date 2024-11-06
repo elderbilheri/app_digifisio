@@ -118,10 +118,10 @@ const RegisterPatient = ({ route, navigation }) => {
 
 			if (patientId) {
 				await updatePatient(patientId, patientData, userId);
-				Alert.alert("Paciente atualizado com sucesso!");
+				Alert.alert("Sucesso", "Paciente atualizado com sucesso!");
 			} else {
 				await savePatient(patientData, userId);
-				Alert.alert("Paciente cadastrado com sucesso!");
+				Alert.alert("Sucesso", "Paciente cadastrado com sucesso!");
 			}
 
 			console.log(patientData);
@@ -353,7 +353,7 @@ const RegisterPatient = ({ route, navigation }) => {
 			/>
 
 			<TouchableOpacity onPress={() => navigation.goBack()}>
-				<Text style={styles.link}>Cancelar</Text>
+				<Text style={styles.link}>CANCELAR</Text>
 			</TouchableOpacity>
 		</ScrollView>
 	);
@@ -414,10 +414,15 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 	},
 	link: {
-		color: "blue",
-		textAlign: "center",
 		marginVertical: 10,
-		fontSize: 18,
+		color: "#FFF",
+		textAlign: "center",
+		marginTop: 4,
+		marginBottom: 2,
+		paddingVertical: 6,
+		fontSize: 16,
+		fontWeight: "400",
+		backgroundColor: "#444",
 	},
 });
 

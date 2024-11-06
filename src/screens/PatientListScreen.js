@@ -25,10 +25,10 @@ const PatientListScreen = () => {
 				const user = await getUser();
 				if (user) {
 					const patientsList = await getPatients(user);
-					console.log(
-						"---------------------------------Pacientes recuperados:-----------------------",
-						patientsList
-					); // Log para depuração
+					// console.log(
+					// 	"Pacientes recuperados: ",
+					// 	patientsList
+					// ); // Log para depuração
 					setPatients(patientsList);
 				} else {
 					console.log("Usuário não encontrado.");
@@ -74,20 +74,28 @@ const PatientListScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			<View>
+			<View style={styles.headerContainer}>
 				<Text style={styles.title}>Lista de Pacientes</Text>
+			</View>
+
+			<View style={styles.listContainer}>
 				{patients.length > 0 ? (
 					<FlatList
 						data={patients}
 						keyExtractor={(item) => item.id}
 						renderItem={renderPatientItem}
+						contentContainerStyle={{ paddingBottom: 20 }}
 					/>
 				) : (
-					<Text>Nenhum paciente encontrado.</Text>
+					<Text style={styles.noPatientsText}>
+						Nenhum paciente encontrado.
+					</Text>
 				)}
 			</View>
 
-			<NavigateButton targetScreen="Home" title="Voltar" />
+			<View style={styles.footer}>
+				<NavigateButton targetScreen="Home" title="VOLTAR" />
+			</View>
 		</View>
 	);
 };
@@ -99,6 +107,9 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFF",
 		justifyContent: "space-between",
 	},
+	headerContainer: {
+		paddingBottom: 8,
+	},
 	title: {
 		fontSize: 24,
 		fontWeight: "bold",
@@ -107,6 +118,9 @@ const styles = StyleSheet.create({
 		backgroundColor: "#281942",
 		paddingVertical: 5,
 		color: "#FFF",
+	},
+	listContainer: {
+		flex: 1, // Área rolável para a lista
 	},
 	patientItem: {
 		flexDirection: "row",
@@ -126,6 +140,16 @@ const styles = StyleSheet.create({
 	},
 	arrowButton: {
 		justifyContent: "center",
+	},
+	noPatientsText: {
+		textAlign: "center",
+		color: "#555",
+		marginVertical: 20,
+	},
+	footer: {
+		paddingTop: 8,
+		borderTopWidth: 1,
+		borderTopColor: "#DDD",
 	},
 });
 
