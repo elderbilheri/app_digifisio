@@ -82,3 +82,25 @@ export const updatePatient = async (patientId, updatedPatientData, userId) => {
 		throw new Error("Erro ao atualizar paciente.");
 	}
 };
+
+// Função para deletar um paciente específico de um usuário
+export const deletePatient = async (patientId, userId) => {
+	try {
+		const patients = await AsyncStorage.getItem(`patients_${userId}`);
+		const parsedPatients = patients ? JSON.parse(patients) : [];
+
+		// Filtra para manter apenas os pacientes que não correspondem ao ID a ser excluído
+		const updatedPatients = parsedPatients.filter(
+			(patient) => patient.id !== patientId
+		);
+
+		await AsyncStorage.setItem(
+			`patients_${userId}`,
+			JSON.stringify(updatedPatients)
+		);
+		return true;
+	} catch (error) {
+		console.error("Erro ao excluir paciente:", error);
+		return false;
+	}
+};

@@ -16,6 +16,7 @@ import {
 	getAttendanceById,
 	updateAttendance,
 	saveAttendance,
+	deleteAttendance,
 } from "../services/attendanceService";
 
 const schema = Yup.object().shape({
@@ -70,6 +71,39 @@ const AttendanceRegisterScreen = ({ route, navigation }) => {
 			console.error("Erro ao salvar atendimento:", error);
 			Alert.alert("Erro", "Não foi possível salvar o atendimento.");
 		}
+	};
+
+	// Função para confirmar e excluir o atendimento
+	const handleDeleteAttendance = () => {
+		Alert.alert(
+			"Confirmar Exclusão",
+			"Tem certeza que deseja excluir este atendimento?",
+			[
+				{
+					text: "Não",
+					style: "cancel",
+				},
+				{
+					text: "Sim",
+					style: "destructive",
+					onPress: async () => {
+						try {
+							await deleteAttendance(attendanceId, patientId);
+							Alert.alert(
+								"Sucesso",
+								"Atendimento excluído com sucesso!"
+							);
+							navigation.navigate("PatientList");
+						} catch (error) {
+							Alert.alert(
+								"Erro",
+								"Não foi possível excluir o atendimento."
+							);
+						}
+					},
+				},
+			]
+		);
 	};
 
 	return (
@@ -165,9 +199,27 @@ const AttendanceRegisterScreen = ({ route, navigation }) => {
 					onPress={handleSubmit(onSubmit)}
 				/>
 
-				<TouchableOpacity onPress={() => navigation.goBack()}>
-					<Text style={styles.link}>CANCELAR</Text>
-				</TouchableOpacity>
+				{attendanceId ? (
+					<View style={styles.buttonContainer}>
+						<TouchableOpacity
+							style={styles.cancelButton}
+							onPress={() => navigation.goBack()}
+						>
+							<Text style={styles.buttonText}>CANCELAR</Text>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles.deleteButton}
+							onPress={handleDeleteAttendance}
+						>
+							<Text style={styles.buttonText}>EXCLUIR</Text>
+						</TouchableOpacity>
+					</View>
+				) : (
+					<TouchableOpacity onPress={() => navigation.goBack()}>
+						<Text style={styles.link}>CANCELAR</Text>
+					</TouchableOpacity>
+				)}
 			</View>
 		</View>
 	);
@@ -227,6 +279,23 @@ const styles = StyleSheet.create({
 		fontWeight: "400",
 		backgroundColor: "#444",
 	},
+	buttonContainer: {
+		flexDirection: "row",
+		marginTop: 4,
+		gap: 4,
+	},
+	cancelButton: {
+		flex: 3,
+		backgroundColor: "#444",
+		padding: 8,
+		marginRight: 4,
+	},
+	deleteButton: {
+		flex: 1,
+		backgroundColor: "#B22222",
+		padding: 8,
+	},
+	buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 });
 
 export default AttendanceRegisterScreen;

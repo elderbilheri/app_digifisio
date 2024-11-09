@@ -106,6 +106,10 @@ const RegisterUserScreen = () => {
 			>
 				<Text style={styles.buttonText}>Cadastrar</Text>
 			</TouchableOpacity>
+
+			<TouchableOpacity onPress={() => navigation.goBack()}>
+				<Text style={styles.link}>CANCELAR</Text>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -117,6 +121,17 @@ const styles = StyleSheet.create({
 	button: { backgroundColor: "#000", padding: 15, borderRadius: 5 },
 	buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 	error: { color: "red" },
+	link: {
+		marginVertical: 10,
+		color: "#FFF",
+		textAlign: "center",
+		marginTop: 4,
+		marginBottom: 2,
+		paddingVertical: 6,
+		fontSize: 16,
+		fontWeight: "400",
+		backgroundColor: "#444",
+	},
 });
 
 export default RegisterUserScreen;

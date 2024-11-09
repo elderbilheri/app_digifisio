@@ -92,3 +92,23 @@ export const updateAttendance = async (
 		throw new Error("Erro ao atualizar atendimento.");
 	}
 };
+
+// Função para excluir um atendimento.
+export const deleteAttendance = async (attendanceId, patientId) => {
+	try {
+		const attendances =
+			JSON.parse(
+				await AsyncStorage.getItem(`attendances_${patientId}`)
+			) || [];
+		const updatedAttendances = attendances.filter(
+			(attendance) => attendance.id !== attendanceId
+		);
+		await AsyncStorage.setItem(
+			`attendances_${patientId}`,
+			JSON.stringify(updatedAttendances)
+		);
+	} catch (error) {
+		console.error("Erro ao deletar atendimento:", error);
+		throw error;
+	}
+};

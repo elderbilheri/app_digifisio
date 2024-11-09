@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { getUserById, logoutUser } from "../services/authService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = ({ navigation }) => {
+	const [showDropdown, setShowDropdown] = useState(false);
+
+	// Função para deslogar o usuário
+	const handleLogout = async () => {
+		await logoutUser();
+		navigation.replace("Login");
+	};
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.header}>
@@ -22,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
 					onPress={() => navigation.navigate("AtendimentosHoje")}
 				>
 					<Icon name="calendar" size={40} color="#FFF" />
-					<Text style={styles.cardText}>Atendimentos de Hoje</Text>
+					<Text style={styles.cardText}>Atendimentos do Dia</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
@@ -42,7 +52,35 @@ const HomeScreen = ({ navigation }) => {
 				</TouchableOpacity>
 			</View>
 
-			<View style={styles.footer}></View>
+			<View style={styles.footer}>
+				<TouchableOpacity
+					style={styles.floatingButton}
+					onPress={() => setShowDropdown(!showDropdown)}
+				>
+					<Icon name="person-circle-outline" size={48} color="#fff" />
+				</TouchableOpacity>
+				{showDropdown && (
+					<View style={styles.dropdownMenu}>
+						<TouchableOpacity
+							style={styles.dropdownItem}
+							onPress={() => {
+								navigation.navigate("EditUser");
+								setShowDropdown(!showDropdown);
+							}}
+						>
+							<Text style={styles.dropdownText}>
+								Editar Usuário
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.dropdownItem}
+							onPress={handleLogout}
+						>
+							<Text style={styles.dropdownText}>Sair</Text>
+						</TouchableOpacity>
+					</View>
+				)}
+			</View>
 		</View>
 	);
 };
@@ -101,6 +139,37 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: 30,
 		backgroundColor: "#281942",
+		position: "relative",
+		alignItems: "center",
+	},
+	floatingButton: {
+		position: "absolute",
+		bottom: 4,
+		right: 178,
+		width: 50,
+		height: 50,
+		borderRadius: 30,
+		backgroundColor: "#553A87",
+		alignItems: "center",
+		justifyContent: "center",
+		elevation: 8,
+	},
+	dropdownMenu: {
+		position: "absolute",
+		bottom: 50,
+		right: 130,
+		backgroundColor: "#FFF",
+		borderRadius: 8,
+		padding: 10,
+		elevation: 20,
+	},
+	dropdownItem: {
+		paddingVertical: 10,
+		paddingHorizontal: 12,
+	},
+	dropdownText: {
+		color: "#281942",
+		fontSize: 16,
 	},
 });
 

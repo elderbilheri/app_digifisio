@@ -1,15 +1,38 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Salva um usuário no AsyncStorage
-export async function saveUser(user) {
+// export async function saveUser(user) {
+// 	try {
+// 		const users = await getUsers();
+// 		const newUsers = [...users, user];
+// 		await AsyncStorage.setItem("users", JSON.stringify(newUsers));
+// 	} catch (error) {
+// 		console.error("Erro ao salvar usuário:", error);
+// 	}
+// }
+
+export const saveUser = async (user) => {
 	try {
-		const users = await getUsers();
-		const newUsers = [...users, user];
-		await AsyncStorage.setItem("users", JSON.stringify(newUsers));
+		const storedUsers = await AsyncStorage.getItem("users");
+		const users = storedUsers ? JSON.parse(storedUsers) : [];
+
+		// Verificar se o usuário já existe
+		const userIndex = users.findIndex((u) => u.id === user.id);
+
+		if (userIndex !== -1) {
+			// Atualizar o usuário existente
+			users[userIndex] = user;
+		} else {
+			// Adicionar novo usuário
+			users.push(user);
+		}
+
+		await AsyncStorage.setItem("users", JSON.stringify(users));
 	} catch (error) {
 		console.error("Erro ao salvar usuário:", error);
+		throw error;
 	}
-}
+};
 
 // Retorna todos os usuários armazenados
 export async function getUsers() {
@@ -70,3 +93,15 @@ export async function logoutUser() {
 		console.error("Erro ao fazer logout:", error);
 	}
 }
+
+// Função para excluir usuário pelo ID
+export const deleteUserById = async (userId) => {
+	try {
+		const users = await getUsers();
+		const filteredUsers = users.filter((user) => user.id !== userId);
+		await AsyncStorage.setItem("users", JSON.stringify(filteredUsers));
+	} catch (error) {
+		console.error("Erro ao excluir usuário:", error);
+		throw error;
+	}
+};

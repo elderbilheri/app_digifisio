@@ -19,6 +19,7 @@ import {
 	savePatient,
 	updatePatient,
 	getPatientById,
+	deletePatient,
 } from "../services/patientService";
 
 // Esquema de validação com Yup
@@ -138,6 +139,41 @@ const RegisterPatient = ({ route, navigation }) => {
 			...prevDays,
 			[day]: !prevDays[day],
 		}));
+	};
+
+	const handleDeletePatient = () => {
+		Alert.alert(
+			"Confirmar Exclusão",
+			"Tem certeza de que deseja excluir este paciente?",
+			[
+				{ text: "Não", style: "cancel" },
+				{
+					text: "Sim",
+					style: "destructive",
+					onPress: async () => {
+						if (userId && patientId) {
+							const success = await deletePatient(
+								patientId,
+								userId
+							);
+							if (success) {
+								Alert.alert(
+									"Sucesso",
+									"Paciente excluído com sucesso!"
+								);
+								// navigation.goBack();
+								navigation.navigate("Home");
+							} else {
+								Alert.alert(
+									"Erro",
+									"Erro ao excluir o paciente."
+								);
+							}
+						}
+					},
+				},
+			]
+		);
 	};
 
 	return (
@@ -352,9 +388,27 @@ const RegisterPatient = ({ route, navigation }) => {
 				onPress={handleSubmit(onSubmit)}
 			/>
 
-			<TouchableOpacity onPress={() => navigation.goBack()}>
-				<Text style={styles.link}>CANCELAR</Text>
-			</TouchableOpacity>
+			{patientId ? (
+				<View style={styles.buttonContainer}>
+					<TouchableOpacity
+						style={styles.cancelButton}
+						onPress={() => navigation.goBack()}
+					>
+						<Text style={styles.buttonText}>CANCELAR</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={styles.deleteButton}
+						onPress={handleDeletePatient}
+					>
+						<Text style={styles.buttonText}>EXCLUIR</Text>
+					</TouchableOpacity>
+				</View>
+			) : (
+				<TouchableOpacity onPress={() => navigation.goBack()}>
+					<Text style={styles.link}>CANCELAR</Text>
+				</TouchableOpacity>
+			)}
 		</ScrollView>
 	);
 };
@@ -424,6 +478,23 @@ const styles = StyleSheet.create({
 		fontWeight: "400",
 		backgroundColor: "#444",
 	},
+	buttonContainer: {
+		flexDirection: "row",
+		marginTop: 4,
+		gap: 4,
+	},
+	cancelButton: {
+		flex: 3,
+		backgroundColor: "#444",
+		padding: 8,
+		marginRight: 4,
+	},
+	deleteButton: {
+		flex: 1,
+		backgroundColor: "#B22222",
+		padding: 8,
+	},
+	buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
 });
 
 export default RegisterPatient;

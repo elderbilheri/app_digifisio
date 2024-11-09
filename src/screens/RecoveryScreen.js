@@ -77,7 +77,7 @@ const RecoveryScreen = () => {
 				</Text>
 			</TouchableOpacity>
 
-			<NavigateButton targetScreen="Login" title="Voltar ao Login" />
+			<NavigateButton targetScreen="Login" title="VOLTAR" />
 		</View>
 	);
 };
