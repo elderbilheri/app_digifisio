@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { getUserById, logoutUser } from "../services/authService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logoutUser } from "../services/authService";
 
 const HomeScreen = ({ navigation }) => {
 	const [showDropdown, setShowDropdown] = useState(false);
@@ -29,10 +28,10 @@ const HomeScreen = ({ navigation }) => {
 			<View style={styles.cardsContainer}>
 				<TouchableOpacity
 					style={[styles.card, { backgroundColor: "#D282BC" }]}
-					onPress={() => navigation.navigate("AtendimentosHoje")}
+					onPress={() => navigation.navigate("PatientsToday")}
 				>
 					<Icon name="calendar" size={40} color="#FFF" />
-					<Text style={styles.cardText}>Atendimentos do Dia</Text>
+					<Text style={styles.cardText}>Pacientes do Dia</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity

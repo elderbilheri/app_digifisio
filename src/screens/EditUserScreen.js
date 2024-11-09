@@ -65,7 +65,7 @@ const EditUserScreen = () => {
 
 	const onSubmit = async (data) => {
 		try {
-			await saveUser({ ...userData, ...data }); // Atualiza os dados com o ID original
+			await saveUser({ id: userData.id, ...data });
 			await logoutUser(); // Desloga o usuário para que faça login novamente
 			Alert.alert("Sucesso", "Dados atualizados com sucesso!");
 			navigation.navigate("Login");

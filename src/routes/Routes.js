@@ -11,6 +11,7 @@ import PatientListScreen from "../screens/PatientListScreen";
 import AttendanceListScreen from "../screens/AttendanceListScreen";
 import AttendanceRegisterScreen from "../screens/AttendanceRegisterScreen";
 import EditUserScreen from "../screens/EditUserScreen";
+import PatientsTodayScreen from "../screens/PatientsTodayScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +67,11 @@ const Routes = () => {
 				<Stack.Screen
 					name="EditUser"
 					component={EditUserScreen}
+					options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name="PatientsToday"
+					component={PatientsTodayScreen}
 					options={{ headerShown: false }}
 				/>
 			</Stack.Navigator>

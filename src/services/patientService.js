@@ -104,3 +104,34 @@ export const deletePatient = async (patientId, userId) => {
 		return false;
 	}
 };
+
+// Função para listar pacientes com atendimento no dia atual
+export const getPatientsByDay = async (userId) => {
+	try {
+		const patientsData = await AsyncStorage.getItem(`patients_${userId}`);
+		const patients = patientsData ? JSON.parse(patientsData) : [];
+
+		// Obter o dia atual da semana
+		const currentDayIndex = new Date().getDay();
+		const daysOfWeekMap = [
+			"Domingo",
+			"Segunda-feira",
+			"Terça-feira",
+			"Quarta-feira",
+			"Quinta-feira",
+			"Sexta-feira",
+			"Sabado",
+		];
+		const currentDay = daysOfWeekMap[currentDayIndex];
+
+		// Filtrar pacientes com atendimento no dia atual
+		const patientsWithToday = patients.filter((patient) =>
+			patient.daysOfWeek.includes(currentDay)
+		);
+
+		return patientsWithToday;
+	} catch (error) {
+		console.error("Erro ao recuperar pacientes:", error);
+		return [];
+	}
+};

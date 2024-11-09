@@ -104,7 +104,7 @@ const RegisterUserScreen = () => {
 				onPress={handleSubmit(onSubmit)}
 				style={styles.button}
 			>
-				<Text style={styles.buttonText}>Cadastrar</Text>
+				<Text style={styles.buttonText}>CADASTRAR</Text>
 			</TouchableOpacity>
 
 			<TouchableOpacity onPress={() => navigation.goBack()}>

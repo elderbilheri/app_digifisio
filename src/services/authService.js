@@ -1,16 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Salva um usuário no AsyncStorage
-// export async function saveUser(user) {
-// 	try {
-// 		const users = await getUsers();
-// 		const newUsers = [...users, user];
-// 		await AsyncStorage.setItem("users", JSON.stringify(newUsers));
-// 	} catch (error) {
-// 		console.error("Erro ao salvar usuário:", error);
-// 	}
-// }
-
 export const saveUser = async (user) => {
 	try {
 		const storedUsers = await AsyncStorage.getItem("users");
