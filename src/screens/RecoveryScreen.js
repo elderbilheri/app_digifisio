@@ -10,7 +10,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { getUser } from "../services/authService";
+import { getUsers } from "../services/authService";
 import { useNavigation } from "@react-navigation/native";
 import NavigateButton from "../components/NavigateButton";
 
@@ -33,10 +33,15 @@ const RecoveryScreen = () => {
 
 	const onSubmit = async (data) => {
 		setLoading(true);
-		const user = await getUser();
+		const users = await getUsers();
 		setLoading(false);
 
-		if (user && user.recoveryKey === data.recoveryKey) {
+		// Verifica se algum usuário possui a palavra-chave de recuperação informada
+		const user = users.find(
+			(user) => user.recoveryKey === data.recoveryKey
+		);
+
+		if (user) {
 			Alert.alert(
 				"Recuperação de Conta",
 				`Usuário: ${user.username}, Senha: ${user.password}`
