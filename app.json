@@ -1,6 +1,6 @@
 {
 	"expo": {
-		"name": "digifisio",
+		"name": "Digifisio",
 		"slug": "digifisio",
 		"version": "1.0.0",
 		"orientation": "portrait",
@@ -14,9 +14,16 @@
 		"ios": {
 			"supportsTablet": true
 		},
-		"android": {},
+		"android": {
+			"package": "com.devkuro.digifisio"
+		},
 		"web": {
 			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "13f80bfb-096f-4e9e-af36-28794a35a5ce"
+			}
 		}
 	}
 }
